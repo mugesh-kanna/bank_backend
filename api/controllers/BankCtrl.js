@@ -23,7 +23,7 @@ class BankCtrl{
                 const error = new Error("No Data Found");
                 res.status(200).json({
                     dataStatus: false,
-                    status: 404,
+                    status: 200,
                     message: error.message
                 });
 
@@ -66,9 +66,9 @@ class BankCtrl{
             });
 
         }else {
-            res.status(404).json({
-                dataStatus: true,
-                status: 404,
+            res.status(200).json({
+                dataStatus: false,
+                status: 200,
                 message: 'Some error occurred !!!'
             });
         }
@@ -101,9 +101,9 @@ class BankCtrl{
             });
 
         }else {
-            res.status(404).json({
-                dataStatus: true,
-                status: 404,
+            res.status(200).json({
+                dataStatus: false,
+                status: 200,
                 message: 'Wrong Credentials'
             });
         }
