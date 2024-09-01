@@ -6,10 +6,10 @@ const mysql2 = require('mysql2');
 class db {
 
     constructor() {
-      this.db = mysql2.createConnection({
-        // connectionLimit: 10,
-        // waitForConnections: true,
-        // multipleStatements: true,
+      this.db = mysql2.createPool({
+        connectionLimit: 10,
+        waitForConnections: true,
+        multipleStatements: true,
         host: 'banking.clgqgoyei99l.ap-south-1.rds.amazonaws.com',
         user: 'admin',
         password: '0DduswYQppngzOFEt4Ws',
@@ -17,16 +17,16 @@ class db {
         post: 3306
     });
 
-        // this.checkConnection();
+        this.checkConnection();
         // this.db.connection.end();
 
-        this.db.connect(err => {
-          if (err) {
-            console.error('Error connecting to the database:', err.stack);
-            return;
-          }
-          console.log('Connected to the database.');
-        });
+        // this.db.connect(err => {
+        //   if (err) {
+        //     console.error('Error connecting to the database:', err.stack);
+        //     return;
+        //   }
+        //   console.log('Connected to the database.');
+        // });
     }
 
     checkConnection() {
