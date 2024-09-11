@@ -204,7 +204,7 @@ class BankCtrl{
         const data = records;
         const tbl_name = 'customer_management';
         // let filter_data = common.Objfilter(data);
-        result = await BankModel.customerUpt(filter_data, tbl_name);
+        result = await BankModel.customerUpt(data, tbl_name);
             
         resp = result.data;
         console.log(result);
