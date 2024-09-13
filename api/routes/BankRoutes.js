@@ -14,5 +14,6 @@ router.post('/forgotPassword', auth, BankCtrl.ForgotPassword);
 router.post('/resetPassword', auth, BankCtrl.ResetPassword);
 router.post('/customerUpt', auth, BankCtrl.customerUpt);
 router.get('/customerDet', auth, BankCtrl.customerDet);
+router.post('/juristicPerUpt', auth, BankCtrl.juristicPerUpt);
 
 module.exports = router;

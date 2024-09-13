@@ -119,6 +119,60 @@ class BankModel{
         console.log(sql);
         return db(sql);
     }
+
+    juristicPerUpt = async (data, tbl_name) => {
+        let id = data?.id;
+        try {
+            delete data?.id;
+            if (!id) {
+                // Insert new data if no id is present
+                let sql = `INSERT INTO ${tbl_name} 
+                    (fullName, email, gender, mobileNumber, dateOfBirth, streetAddress, streetAddress2, city, state, postalCode, 
+                    profilePhoto, 
+                    companyName, industryType, designation, incomePerMonth, cardNo, citizen_document, passport, passport_upload, 
+                    household_registration, registration_document, government_issued, government_issued_doc, idNo, bank_statement_doc) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    
+                let params = [
+                    data.fullName, data.email, data.gender, data.mobileNumber, data.dateOfBirth, data.streetAddress,
+                    data.streetAddress2, data.city, data.state, data.postalCode, data.profilePhoto, data.companyName, data.industryType,
+                    data.designation, data.incomePerMonth, data.cardNo, data.citizen_document, data.passport, data.passport_upload,
+                    data.household_registration, data.registration_document, data.government_issued, data.government_issued_doc,
+                    data.idNo, data.bank_statement_doc
+                ];
+                
+                console.log(sql, params);
+                const result = await db(sql, params);
+                result.data = '1';
+                return result;
+            } else {
+                // Update existing record if id exists
+                let sql = `UPDATE ${tbl_name} SET 
+                    fullName = ?, email = ?, gender = ?, mobileNumber = ?, dateOfBirth = ?, streetAddress = ?, streetAddress2 = ?, 
+                    city = ?, state = ?, postalCode = ?, profilePhoto = ?, companyName = ?, industryType = ?, designation = ?, incomePerMonth = ?, 
+                    cardNo = ?, citizen_document = ?, passport = ?, passport_upload = ?, household_registration = ?, 
+                    registration_document = ?, government_issued = ?, government_issued_doc = ?, idNo = ?, bank_statement_doc = ? 
+                    WHERE id = ?`;
+    
+                let params = [
+                    data.fullName, data.email, data.gender, data.mobileNumber, data.dateOfBirth, data.streetAddress,
+                    data.streetAddress2, data.city, data.state, data.postalCode, data.profilePhoto, data.companyName, data.industryType,
+                    data.designation, data.incomePerMonth, data.cardNo, data.citizen_document, data.passport, data.passport_upload,
+                    data.household_registration, data.registration_document, data.government_issued, data.government_issued_doc,
+                    data.idNo, data.bank_statement_doc, id
+                ];
+    
+                console.log(sql, params);
+                const result = await db(sql, params);
+                result.data = '1';
+                return result;
+            }    
+        } catch (error) {
+            const result = {};
+            result.data = '3';
+            return result;
+        }
+    }
     
 }
 

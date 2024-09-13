@@ -255,6 +255,33 @@ class BankCtrl{
         }
 
     }
+
+    juristicPerUpt = async (req, res, next) => {
+        const records = req.body.records;
+        let result;
+        let resp;
+        const data = records;
+        const tbl_name = 'juristic_person_details';
+        // let filter_data = common.Objfilter(data);
+        result = await BankModel.juristicPerUpt(data, tbl_name);
+            
+        resp = result.data;
+        console.log(result);
+        if (resp == '1') {
+            res.status(200).json({
+                dataStatus: true,
+                status: 200,
+                message: 'Saved Successfully'
+            });
+
+        }else {
+            res.status(404).json({
+                dataStatus: false,
+                status: 404,
+                message: 'Unable to Update'
+            });
+        }
+    }
 }
 
 module.exports = new BankCtrl;
