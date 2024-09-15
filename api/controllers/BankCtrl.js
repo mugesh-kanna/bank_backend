@@ -207,7 +207,6 @@ class BankCtrl{
         result = await BankModel.customerUpt(data, tbl_name);
             
         resp = result.data;
-        console.log(result);
         if (resp == '1') {
             res.status(200).json({
                 dataStatus: true,
@@ -215,7 +214,16 @@ class BankCtrl{
                 message: 'Saved Successfully'
             });
 
-        }else {
+        }
+        else if (resp == '2') {
+            res.status(200).json({
+                dataStatus: true,
+                status: 200,
+                message: 'Deleted Successfully'
+            });
+
+        }
+        else {
             res.status(404).json({
                 dataStatus: false,
                 status: 404,
@@ -243,7 +251,6 @@ class BankCtrl{
                     status: 200,
                     message: error.message
                 });
-
             }
 
         } catch (error) {
@@ -266,7 +273,6 @@ class BankCtrl{
         result = await BankModel.juristicPerUpt(data, tbl_name);
             
         resp = result.data;
-        console.log(result);
         if (resp == '1') {
             res.status(200).json({
                 dataStatus: true,
@@ -274,11 +280,208 @@ class BankCtrl{
                 message: 'Saved Successfully'
             });
 
-        }else {
+        }
+        else if (resp == '2') {
+            res.status(200).json({
+                dataStatus: true,
+                status: 200,
+                message: 'Deleted Successfully'
+            });
+        }
+        else {
             res.status(404).json({
                 dataStatus: false,
                 status: 404,
                 message: 'Unable to Update'
+            });
+        }
+    }
+
+    juristicPerDet = async (req, res, next) => {
+        try {
+   
+            const result = await BankModel.juristicPerDet();
+    
+            let data = common.empty(result);
+            if (!data) {
+                res.status(200).json({
+                    dataStatus: true,
+                    status: 200,
+                    result: Sres(result)
+                })
+            } else {
+                const error = new Error("No Data Found");
+                res.status(200).json({
+                    dataStatus: false,
+                    status: 200,
+                    message: error.message
+                });
+
+            }
+
+        } catch (error) {
+            res.status(500).json({
+                dataStatus: false,
+                status: 500,
+                message: error.message 
+            });
+        }
+    }
+
+    loanReqUpt = async (req, res, next) => {
+        const records = req.body.records;
+        let result;
+        let resp;
+        const data = records;
+        const tbl_name = 'loan_request_details';
+        // let filter_data = common.Objfilter(data);
+        result = await BankModel.loanReqUpt(data, tbl_name);
+            
+        resp = result.data;
+        if (resp == '1') {
+            res.status(200).json({
+                dataStatus: true,
+                status: 200,
+                message: 'Saved Successfully'
+            });
+
+        }
+        else if (resp == '2') {
+            res.status(200).json({
+                dataStatus: true,
+                status: 200,
+                message: 'Deleted Successfully'
+            });
+        }
+        else if (resp == '4') {
+            res.status(200).json({
+                dataStatus: true,
+                status: 200,
+                message: 'Approved Successfully'
+            });
+        }
+        else if (resp == '5') {
+            res.status(200).json({
+                dataStatus: true,
+                status: 200,
+                message: 'Rejected Successfully'
+            });
+        }
+        else {
+            res.status(404).json({
+                dataStatus: false,
+                status: 404,
+                message: 'Unable to Update'
+            });
+        }
+    }
+
+    loanReqDet = async (req, res, next) => {
+        try {
+   
+            const result = await BankModel.loanReqDet();
+    
+            let data = common.empty(result);
+            if (!data) {
+                res.status(200).json({
+                    dataStatus: true,
+                    status: 200,
+                    result: Sres(result)
+                })
+            } else {
+                const error = new Error("No Data Found");
+                res.status(200).json({
+                    dataStatus: false,
+                    status: 200,
+                    message: error.message
+                });
+
+            }
+
+        } catch (error) {
+            res.status(500).json({
+                dataStatus: false,
+                status: 500,
+                message: error.message 
+            });
+        }
+    }
+
+    creditCardReqUpt = async (req, res, next) => {
+        const records = req.body.records;
+        let result;
+        let resp;
+        const data = records;
+        const tbl_name = 'creditcard_request_details';
+        // let filter_data = common.Objfilter(data);
+        result = await BankModel.creditCardReqUpt(data, tbl_name);
+            
+        resp = result.data;
+        if (resp == '1') {
+            res.status(200).json({
+                dataStatus: true,
+                status: 200,
+                message: 'Saved Successfully'
+            });
+
+        }
+        else if (resp == '2') {
+            res.status(200).json({
+                dataStatus: true,
+                status: 200,
+                message: 'Deleted Successfully'
+            });
+        }
+        else if (resp == '4') {
+            res.status(200).json({
+                dataStatus: true,
+                status: 200,
+                message: 'Approved Successfully'
+            });
+        }
+        else if (resp == '5') {
+            res.status(200).json({
+                dataStatus: true,
+                status: 200,
+                message: 'Rejected Successfully'
+            });
+        }
+        else {
+            res.status(404).json({
+                dataStatus: false,
+                status: 404,
+                message: 'Unable to Update'
+            });
+        }
+    }
+
+    creditCardReqDet = async (req, res, next) => {
+        try {
+   
+            const result = await BankModel.creditCardReqDet();
+    
+            let data = common.empty(result);
+            if (!data) {
+                res.status(200).json({
+                    dataStatus: true,
+                    status: 200,
+                    result: Sres(result)
+                })
+            } else {
+                const error = new Error("No Data Found");
+                res.status(200).json({
+                    dataStatus: false,
+                    status: 200,
+                    message: error.message
+                });
+
+            }
+
+        } catch (error) {
+            res.status(500).json({
+                dataStatus: false,
+                status: 500,
+                message: error.message 
             });
         }
     }
