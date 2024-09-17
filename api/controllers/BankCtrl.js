@@ -120,8 +120,8 @@ class BankCtrl{
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-              user: 'mugeshkanna030@gmail.com',
-              pass: 'nvcdlrnfkgguzdnw',
+              user: 'velantechsolution@gmail.com',
+              pass: 'forohlhpcqedeppy',
             },
           });
 
@@ -134,8 +134,8 @@ class BankCtrl{
             try{
                 const { to, subject, text, html } = req.body;
                   const responseEmail = await transporter.sendMail({
-                    from: 'mugeshkanna030@gmail.com',
-                    to: 'gmkanna532000@gmail.com',
+                    from: 'velantechsolution@gmail.com',
+                    to: filter_data.email,
                     subject: 'Reset Your Password',
                     // text: 'Hello ',
                     html: "<h2>Forgot Your Password?</h2> <h4>That's ok, it happens! Cick on the link below to reset your password.</h4><a href='" + url + "' style='color: blue;'>Reset Your Password</a>",
@@ -172,6 +172,7 @@ class BankCtrl{
         const data = {
             'email':records.email,
             'password':records.password,
+            'id': records.id
         }
 
         const tbl_name = 'users';

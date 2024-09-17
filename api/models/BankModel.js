@@ -47,8 +47,9 @@ class BankModel{
     ResetPassword = async (data, tbl_name) => {
         let result = {};
         try {
-            let sql = "UPDATE users set password = '" + data.password + "' WHERE email = '" + data.email + "'";
-            return 1;
+            let sql = "UPDATE users set password = '" + data.password + "' WHERE id = '" + data.id + "'";
+            let result = await db(sql);
+            return result.affectedRows;
         } catch (error) {
             result.message = error.sqlMessage;
             result = '';
