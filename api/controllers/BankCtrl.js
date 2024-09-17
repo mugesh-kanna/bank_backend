@@ -31,9 +31,9 @@ class BankCtrl{
             }
 
         } catch (error) {
-            res.status(500).json({
+            res.status(200).json({
                 dataStatus: false,
-                status: 500,
+                status: 200,
                 message: error.message 
             });
         }
@@ -147,7 +147,7 @@ class BankCtrl{
                     message: 'Mail Sent Successfully'
                 });
                }catch(err){
-                 res.status(400).json({
+                 res.status(200).json({
                     // err,
                     dataStatus: false,
                     status: 200,
@@ -156,7 +156,7 @@ class BankCtrl{
               }
         }
         else{
-            res.status(400).json({
+            res.status(200).json({
                 // err,
                 dataStatus: false,
                 status: 200,
@@ -225,9 +225,9 @@ class BankCtrl{
 
         }
         else {
-            res.status(404).json({
+            res.status(200).json({
                 dataStatus: false,
-                status: 404,
+                status: 200,
                 message: 'Unable to Update'
             });
         }
@@ -255,9 +255,9 @@ class BankCtrl{
             }
 
         } catch (error) {
-            res.status(500).json({
+            res.status(200).json({
                 dataStatus: false,
-                status: 500,
+                status: 200,
                 message: error.message 
             });
         }
@@ -290,9 +290,9 @@ class BankCtrl{
             });
         }
         else {
-            res.status(404).json({
+            res.status(200).json({
                 dataStatus: false,
-                status: 404,
+                status: 200,
                 message: 'Unable to Update'
             });
         }
@@ -321,9 +321,9 @@ class BankCtrl{
             }
 
         } catch (error) {
-            res.status(500).json({
+            res.status(200).json({
                 dataStatus: false,
-                status: 500,
+                status: 200,
                 message: error.message 
             });
         }
@@ -369,9 +369,9 @@ class BankCtrl{
             });
         }
         else {
-            res.status(404).json({
+            res.status(200).json({
                 dataStatus: false,
-                status: 404,
+                status: 200,
                 message: 'Unable to Update'
             });
         }
@@ -400,9 +400,9 @@ class BankCtrl{
             }
 
         } catch (error) {
-            res.status(500).json({
+            res.status(200).json({
                 dataStatus: false,
-                status: 500,
+                status: 200,
                 message: error.message 
             });
         }
@@ -448,9 +448,9 @@ class BankCtrl{
             });
         }
         else {
-            res.status(404).json({
+            res.status(200).json({
                 dataStatus: false,
-                status: 404,
+                status: 200,
                 message: 'Unable to Update'
             });
         }
@@ -479,9 +479,9 @@ class BankCtrl{
             }
 
         } catch (error) {
-            res.status(500).json({
+            res.status(200).json({
                 dataStatus: false,
-                status: 500,
+                status: 200,
                 message: error.message 
             });
         }
