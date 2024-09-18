@@ -6,6 +6,7 @@ const BankModel = require("../models/BankModel");
 const common = require("../utlis/common");
 const Sres= common.res;
 const nodemailer = require("nodemailer");
+const AWS = require('aws-sdk');
 
 class BankCtrl{
     All = async (req, res, next) => {
@@ -485,6 +486,34 @@ class BankCtrl{
                 message: error.message 
             });
         }
+    }
+
+    upload = async (req, res, next) => {
+
+        const s3 = new AWS.S3({
+            accessKeyId: 'AKIAZAI4HHM4UJASQLX7',
+            secretAccessKey: 'yX6/SbU75NEhXmUVWvsak0UgUuoCBCqgaowWFskm',
+            region: 'ap-south-1', // Replace with your desired region
+            bucketName: 'bankingbackend' // Replace with your bucket name
+        });
+        const records = req.body;
+        const filename = req.headers['x-filename'];
+
+        try {
+            // const originalFileName = records.file.originalname;
+            const params = {
+              Bucket: s3.config.bucketName,
+              Key: filename,
+              Body: records
+            };
+        
+            const uploadResult = await s3.upload(params).promise();
+            
+            res.status(200).json({ dataStatus: true, message: 'File uploaded successfully!', data: uploadResult });
+          } catch (error) {
+            console.error(error);
+            res.status(200).json({ dataStatus: false, error: 'Error uploading file' });
+          }
     }
 }
 

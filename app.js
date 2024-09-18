@@ -30,6 +30,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json());
 
+app.use(express.raw({ type: '*/*', limit: '10mb' }));
+
 app.use('/api', BankRoutes);
 
 // app.use(express.static(path.join(__dirname, './api/dist/sample')));
