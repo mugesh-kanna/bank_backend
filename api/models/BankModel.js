@@ -1,4 +1,7 @@
 const db = require('../config/database');
+const db2 = require('../config/database');
+const common = require("../utlis/common");
+const Sres = common.res;
 
 class BankModel{
     GetAll = () => {
@@ -60,6 +63,7 @@ class BankModel{
     customerUpt = async (data, tbl_name) => {
         let id = data?.id;
         let status = data?.status;
+        let reason = data?.reason;
         try {
             delete data?.id;
             if(status == '1'){
@@ -70,10 +74,29 @@ class BankModel{
             }
             else if(status == '2' || status == '3'){
                 let curDate = new Date();
-                let sql = "UPDATE customer_management SET approve_sts = ?, approve_date = ? WHERE id = ?";
-                let params = [status == '2' ? 1 : 2, curDate, id];
+                let sql = "UPDATE customer_management SET approve_sts = ?, approve_date = ?, reason = ? WHERE id = ?";
+                let params = [status == '2' ? 1 : 2, curDate, reason, id];
                 const result = await db(sql, params);
                 result.data = (status == '2') ? '4' : '5';
+                let getsql = `Select * from customer_management WHERE isactive = 1 and id = ${id}`;
+                let customerDet = await db2(getsql);
+                let getData = customerDet[0];
+                let mobile = (getData.mobileNumber).toString();
+                result.fullName = getData.fullName;
+                result.email = getData.email;
+                result.customer_id = getData.customer_id;
+                if(status == '2'){
+                    const first4Digits = mobile.slice(0, 4);
+                    // Get the year from the DOB (assuming DOB is in YYYY-MM-DD format)
+                    const yearOfBirth = new Date(getData.dateOfBirth).getFullYear();
+                    // Combine the first 4 digits of the phone number with the year of birth
+                    const password = first4Digits + '@' + yearOfBirth;
+
+                    let insertsql = `INSERT INTO users (email, password) VALUES (?, ?)`;
+                    let insertparams = [getData.customer_id, password];
+                    let insertres = await db(insertsql, insertparams);
+                    result.password = password;
+                }
                 return result;
             }
             else{
@@ -119,13 +142,13 @@ class BankModel{
                     ];
         
                     const result = await db(sql, params);
-                    result.data = '1';
+                    result.data = '3';
                     return result;
                 }
             }   
         } catch (error) {
             const result = {};
-            result.data = '3';
+            result.data = '6';
             return result;
         }
     }
@@ -143,6 +166,7 @@ class BankModel{
     juristicPerUpt = async (data, tbl_name) => {
         let id = data?.id;
         let status = data?.status;
+        let reason = data?.reason;
         try {
             delete data?.id;
             if(status == '1'){
@@ -154,10 +178,29 @@ class BankModel{
             }
             else if(status == '2' || status == '3'){
                 let curDate = new Date();
-                let sql = "UPDATE juristic_person_details SET approve_sts = ?, approve_date = ? WHERE id = ?";
-                let params = [status == '2' ? 1 : 2, curDate, id];
+                let sql = "UPDATE juristic_person_details SET approve_sts = ?, approve_date = ?, reason = ? WHERE id = ?";
+                let params = [status == '2' ? 1 : 2, curDate, reason, id];
                 const result = await db(sql, params);
                 result.data = (status == '2') ? '4' : '5';
+                let getsql = `Select * from juristic_person_details WHERE isactive = 1 and id = ${id}`;
+                let customerDet = await db2(getsql);
+                let getData = customerDet[0];
+                let mobile = (getData.mobileNumber).toString();
+                result.fullName = getData.fullName;
+                result.email = getData.email;
+                result.customer_id = getData.customer_id;
+                if(status == '2'){
+                    const first4Digits = mobile.slice(0, 4);
+                    // Get the year from the DOB (assuming DOB is in YYYY-MM-DD format)
+                    const yearOfBirth = new Date(getData.dateOfBirth).getFullYear();
+                    // Combine the first 4 digits of the phone number with the year of birth
+                    const password = first4Digits + '@' + yearOfBirth;
+
+                    let insertsql = `INSERT INTO users (email, password) VALUES (?, ?)`;
+                    let insertparams = [getData.customer_id, password];
+                    let insertres = await db(insertsql, insertparams);
+                    result.password = password;
+                }
                 return result;
             }
             else{
@@ -203,13 +246,13 @@ class BankModel{
                     ];
         
                     const result = await db(sql, params);
-                    result.data = '1';
+                    result.data = '3';
                     return result;
                 }
             }    
         } catch (error) {
             const result = {};
-            result.data = '3';
+            result.data = '6';
             return result;
         }
     }
@@ -227,6 +270,7 @@ class BankModel{
     loanReqUpt = async (data, tbl_name) => {
         let id = data?.id;
         let status = data?.status;
+        let reason = data?.reason;
         try {
             delete data?.id;
             if(status == '1'){
@@ -238,8 +282,8 @@ class BankModel{
             }
             else if(status == '2' || status == '3'){
                 let curDate = new Date();
-                let sql = "UPDATE loan_request_details SET approve_sts = ?, approve_date = ? WHERE id = ?";
-                let params = [status == '2' ? 1 : 2, curDate, id];
+                let sql = "UPDATE loan_request_details SET approve_sts = ?, approve_date = ?, reason = ? WHERE id = ?";
+                let params = [status == '2' ? 1 : 2, curDate, reason, id];
                 const result = await db(sql, params);
                 result.data = (status == '2') ? '4' : '5';
                 return result;
@@ -297,13 +341,44 @@ class BankModel{
     }
 
     loanReqDet = () => {
-        let sql = `Select * from loan_request_details WHERE isactive = 1`;
+        let sql = `SELECT a.id, a.customer_type, case when a.customer_type = 1 then b.customer_id else c.customer_id end as customer_id, 
+        case when a.customer_type = 1 then b.fullName else c.fullName end as fullName, 
+        case when a.customer_type = 1 then b.email else c.email end as email, 
+        case when a.customer_type = 1 then b.gender else c.gender end as gender, 
+        case when a.customer_type = 1 then b.mobileNumber else c.mobileNumber end as mobileNumber, 
+        case when a.customer_type = 1 then b.dateOfBirth else c.dateOfBirth end as dateOfBirth, 
+        case when a.customer_type = 1 then b.streetAddress else c.streetAddress end as streetAddress, 
+        case when a.customer_type = 1 then b.streetAddress2 else c.streetAddress2 end as streetAddress2, 
+        case when a.customer_type = 1 then b.city else c.city end as city, 
+        case when a.customer_type = 1 then b.state else c.state end as state, 
+        case when a.customer_type = 1 then b.postalCode else c.postalCode end as postalCode, 
+        case when a.customer_type = 1 then b.profilePhoto else c.profilePhoto end as profilePhoto, 
+        case when a.customer_type = 1 then b.companyName else c.companyName end as companyName, 
+        case when a.customer_type = 1 then b.industryType else c.industryType end as industryType, 
+        case when a.customer_type = 1 then b.designation else c.designation end as designation, 
+        case when a.customer_type = 1 then b.incomePerMonth else c.incomePerMonth end as incomePerMonth, 
+        case when a.customer_type = 1 then b.cardNo else c.cardNo end as cardNo, 
+        case when a.customer_type = 1 then b.citizen_document else c.citizen_document end as citizen_document, 
+        case when a.customer_type = 1 then b.passport else c.passport end as passport, 
+        case when a.customer_type = 1 then b.passport_upload else c.passport_upload end as passport_upload, 
+        case when a.customer_type = 1 then b.household_registration else c.household_registration end as household_registration, 
+        case when a.customer_type = 1 then b.registration_document else c.registration_document end as registration_document, 
+        case when a.customer_type = 1 then b.government_issued else c.government_issued end as government_issued, 
+        case when a.customer_type = 1 then b.government_issued_doc else c.government_issued_doc end as government_issued_doc, 
+        case when a.customer_type = 1 then b.idNo else c.idNo end as idNo, 
+        case when a.customer_type = 1 then b.bank_statement_doc else c.bank_statement_doc end as bank_statement_doc,
+        a.loanType, a.loanTenure, a.loanAmount, a.purpose, a.collateral, a.approve_sts, a.approve_date, a.reason
+        from loan_request_details a
+        left join customer_management b on b.customer_id = a.customer_id
+        left join juristic_person_details c on c.customer_id = a.customer_id
+        WHERE a.isactive = 1;`;
         return db(sql);
     }
 
     creditCardReqUpt = async (data, tbl_name) => {
         let id = data?.id;
         let status = data?.status;
+        let reason = data?.reason;
         try {
             delete data?.id;
             if(status == '1'){
@@ -315,8 +390,8 @@ class BankModel{
             }
             else if(status == '2' || status == '3'){
                 let curDate = new Date();
-                let sql = "UPDATE creditcard_request_details SET approve_sts = ?, approve_date = ? WHERE id = ?";
-                let params = [status == '2' ? 1 : 2, curDate, id];
+                let sql = "UPDATE creditcard_request_details SET approve_sts = ?, approve_date = ?, reason = ? WHERE id = ?";
+                let params = [status == '2' ? 1 : 2, curDate, reason, id];
                 const result = await db(sql, params);
                 result.data = (status == '2') ? '4' : '5';
                 return result;
@@ -374,7 +449,37 @@ class BankModel{
     }
 
     creditCardReqDet = () => {
-        let sql = `Select * from creditcard_request_details WHERE isactive = 1`;
+        let sql = `SELECT a.id, a.customer_type, case when a.customer_type = 1 then b.customer_id else c.customer_id end as customer_id, 
+        case when a.customer_type = 1 then b.fullName else c.fullName end as fullName, 
+        case when a.customer_type = 1 then b.email else c.email end as email, 
+        case when a.customer_type = 1 then b.gender else c.gender end as gender, 
+        case when a.customer_type = 1 then b.mobileNumber else c.mobileNumber end as mobileNumber, 
+        case when a.customer_type = 1 then b.dateOfBirth else c.dateOfBirth end as dateOfBirth, 
+        case when a.customer_type = 1 then b.streetAddress else c.streetAddress end as streetAddress, 
+        case when a.customer_type = 1 then b.streetAddress2 else c.streetAddress2 end as streetAddress2, 
+        case when a.customer_type = 1 then b.city else c.city end as city, 
+        case when a.customer_type = 1 then b.state else c.state end as state, 
+        case when a.customer_type = 1 then b.postalCode else c.postalCode end as postalCode, 
+        case when a.customer_type = 1 then b.profilePhoto else c.profilePhoto end as profilePhoto, 
+        case when a.customer_type = 1 then b.companyName else c.companyName end as companyName, 
+        case when a.customer_type = 1 then b.industryType else c.industryType end as industryType, 
+        case when a.customer_type = 1 then b.designation else c.designation end as designation, 
+        case when a.customer_type = 1 then b.incomePerMonth else c.incomePerMonth end as incomePerMonth, 
+        case when a.customer_type = 1 then b.cardNo else c.cardNo end as cardNo, 
+        case when a.customer_type = 1 then b.citizen_document else c.citizen_document end as citizen_document, 
+        case when a.customer_type = 1 then b.passport else c.passport end as passport, 
+        case when a.customer_type = 1 then b.passport_upload else c.passport_upload end as passport_upload, 
+        case when a.customer_type = 1 then b.household_registration else c.household_registration end as household_registration, 
+        case when a.customer_type = 1 then b.registration_document else c.registration_document end as registration_document, 
+        case when a.customer_type = 1 then b.government_issued else c.government_issued end as government_issued, 
+        case when a.customer_type = 1 then b.government_issued_doc else c.government_issued_doc end as government_issued_doc, 
+        case when a.customer_type = 1 then b.idNo else c.idNo end as idNo, 
+        case when a.customer_type = 1 then b.bank_statement_doc else c.bank_statement_doc end as bank_statement_doc,
+        a.annualIncome, a.creditLimit, a.creditCardPurpose, a.approve_sts, a.approve_date, a.reason
+        from creditcard_request_details a
+        left join customer_management b on b.customer_id = a.customer_id
+        left join juristic_person_details c on c.customer_id = a.customer_id
+        WHERE a.isactive = 1;`;
         return db(sql);
     }
     
