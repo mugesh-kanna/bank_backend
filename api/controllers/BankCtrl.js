@@ -223,7 +223,20 @@ class BankCtrl{
                 status: 200,
                 message: 'Deleted Successfully'
             });
-
+        }
+        else if (resp == '4') {
+            res.status(200).json({
+                dataStatus: true,
+                status: 200,
+                message: 'Approved Successfully'
+            });
+        }
+        else if (resp == '5') {
+            res.status(200).json({
+                dataStatus: true,
+                status: 200,
+                message: 'Rejected Successfully'
+            });
         }
         else {
             res.status(200).json({
@@ -238,6 +251,39 @@ class BankCtrl{
         try {
    
             const result = await BankModel.customerDet();
+    
+            let data = common.empty(result);
+            if (!data) {
+                res.status(200).json({
+                    dataStatus: true,
+                    status: 200,
+                    result: Sres(result)
+                })
+            } else {
+                const error = new Error("No Data Found");
+                res.status(200).json({
+                    dataStatus: false,
+                    status: 200,
+                    message: error.message
+                });
+            }
+
+        } catch (error) {
+            res.status(200).json({
+                dataStatus: false,
+                status: 200,
+                message: error.message 
+            });
+        }
+
+    }
+
+    customerDetbyId = async (req, res, next) => {
+        try {
+
+            const id = req.query.id;
+   
+            const result = await BankModel.customerDetbyId(id);
     
             let data = common.empty(result);
             if (!data) {
@@ -290,6 +336,20 @@ class BankCtrl{
                 message: 'Deleted Successfully'
             });
         }
+        else if (resp == '4') {
+            res.status(200).json({
+                dataStatus: true,
+                status: 200,
+                message: 'Approved Successfully'
+            });
+        }
+        else if (resp == '5') {
+            res.status(200).json({
+                dataStatus: true,
+                status: 200,
+                message: 'Rejected Successfully'
+            });
+        }
         else {
             res.status(200).json({
                 dataStatus: false,
@@ -328,6 +388,39 @@ class BankCtrl{
                 message: error.message 
             });
         }
+    }
+
+    juristicPerDetbyId = async (req, res, next) => {
+        try {
+
+            const id = req.query.id;
+   
+            const result = await BankModel.juristicPerDetbyId(id);
+    
+            let data = common.empty(result);
+            if (!data) {
+                res.status(200).json({
+                    dataStatus: true,
+                    status: 200,
+                    result: Sres(result)
+                })
+            } else {
+                const error = new Error("No Data Found");
+                res.status(200).json({
+                    dataStatus: false,
+                    status: 200,
+                    message: error.message
+                });
+            }
+
+        } catch (error) {
+            res.status(200).json({
+                dataStatus: false,
+                status: 200,
+                message: error.message 
+            });
+        }
+
     }
 
     loanReqUpt = async (req, res, next) => {

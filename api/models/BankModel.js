@@ -68,6 +68,14 @@ class BankModel{
                 const result = await db(sql, params);
                 result.data = '2';
             }
+            else if(status == '2' || status == '3'){
+                let curDate = new Date();
+                let sql = "UPDATE customer_management SET approve_sts = ?, approve_date = ? WHERE id = ?";
+                let params = [status == '2' ? 1 : 2, curDate, id];
+                const result = await db(sql, params);
+                result.data = (status == '2') ? '4' : '5';
+                return result;
+            }
             else{
                 if (!id) {
                     // Insert new data if no id is present
@@ -88,6 +96,10 @@ class BankModel{
                     
                     const result = await db(sql, params);
                     result.data = '1';
+                    let inserId = result.insertId;
+                    let uptsql = "UPDATE customer_management SET customer_id = ? WHERE id = ?";
+                    let uptparams = [(10000 + inserId), inserId];
+                    await db(uptsql, uptparams);
                     return result;
                 } else {
                     // Update existing record if id exists
@@ -123,6 +135,11 @@ class BankModel{
         return db(sql);
     }
 
+    customerDetbyId(id) {
+        let sql = `Select * from customer_management WHERE isactive = 1 and customer_id = ${id}`;
+        return db(sql);
+    }
+
     juristicPerUpt = async (data, tbl_name) => {
         let id = data?.id;
         let status = data?.status;
@@ -133,6 +150,14 @@ class BankModel{
                 let params = [0, id];
                 const result = await db(sql, params);
                 result.data = '2';
+                return result;
+            }
+            else if(status == '2' || status == '3'){
+                let curDate = new Date();
+                let sql = "UPDATE juristic_person_details SET approve_sts = ?, approve_date = ? WHERE id = ?";
+                let params = [status == '2' ? 1 : 2, curDate, id];
+                const result = await db(sql, params);
+                result.data = (status == '2') ? '4' : '5';
                 return result;
             }
             else{
@@ -155,6 +180,10 @@ class BankModel{
                     
                     const result = await db(sql, params);
                     result.data = '1';
+                    let inserId = result.insertId;
+                    let uptsql = "UPDATE juristic_person_details SET customer_id = ? WHERE id = ?";
+                    let uptparams = [(100000 + inserId), inserId];
+                    await db(uptsql, uptparams);
                     return result;
                 } else {
                     // Update existing record if id exists
@@ -190,6 +219,11 @@ class BankModel{
         return db(sql);
     }
 
+    juristicPerDetbyId(id) {
+        let sql = `Select * from juristic_person_details WHERE isactive = 1 and customer_id = ${id}`;
+        return db(sql);
+    }
+
     loanReqUpt = async (data, tbl_name) => {
         let id = data?.id;
         let status = data?.status;
@@ -203,8 +237,9 @@ class BankModel{
                 return result;
             }
             else if(status == '2' || status == '3'){
-                let sql = "UPDATE loan_request_details SET approve_sts = ? WHERE id = ?";
-                let params = [status == '2' ? 1 : 2, id];
+                let curDate = new Date();
+                let sql = "UPDATE loan_request_details SET approve_sts = ?, approve_date = ? WHERE id = ?";
+                let params = [status == '2' ? 1 : 2, curDate, id];
                 const result = await db(sql, params);
                 result.data = (status == '2') ? '4' : '5';
                 return result;
@@ -213,15 +248,15 @@ class BankModel{
                 if (!id) {
                     // Insert new data if no id is present
                     let sql = `INSERT INTO ${tbl_name} 
-                        (fullName, email, gender, mobileNumber, dateOfBirth, streetAddress, streetAddress2, city, state, postalCode, 
-                        profilePhoto, 
+                        (customer_type, customer_id, fullName, email, gender, mobileNumber, dateOfBirth, streetAddress, 
+                        streetAddress2, city, state, postalCode, profilePhoto, 
                         companyName, industryType, designation, incomePerMonth, cardNo, citizen_document, passport, passport_upload, 
                         household_registration, registration_document, government_issued, government_issued_doc, idNo, bank_statement_doc,
                         loanType, loanTenure, loanAmount, purpose, collateral) 
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         
                     let params = [
-                        data.fullName, data.email, data.gender, data.mobileNumber, data.dateOfBirth, data.streetAddress,
+                        data.customer_type, data.customer_id, data.fullName, data.email, data.gender, data.mobileNumber, data.dateOfBirth, data.streetAddress,
                         data.streetAddress2, data.city, data.state, data.postalCode, data.profilePhoto, data.companyName, data.industryType,
                         data.designation, data.incomePerMonth, data.cardNo, data.citizen_document, data.passport, data.passport_upload,
                         data.household_registration, data.registration_document, data.government_issued, data.government_issued_doc,
@@ -279,8 +314,9 @@ class BankModel{
                 return result;
             }
             else if(status == '2' || status == '3'){
-                let sql = "UPDATE creditcard_request_details SET approve_sts = ? WHERE id = ?";
-                let params = [status == '2' ? 1 : 2, id];
+                let curDate = new Date();
+                let sql = "UPDATE creditcard_request_details SET approve_sts = ?, approve_date = ? WHERE id = ?";
+                let params = [status == '2' ? 1 : 2, curDate, id];
                 const result = await db(sql, params);
                 result.data = (status == '2') ? '4' : '5';
                 return result;
@@ -289,7 +325,7 @@ class BankModel{
                 if (!id) {
                     // Insert new data if no id is present
                     let sql = `INSERT INTO ${tbl_name} 
-                        (fullName, email, gender, mobileNumber, dateOfBirth, streetAddress, streetAddress2, city, state, postalCode, 
+                        (customer_type, customer_id, fullName, email, gender, mobileNumber, dateOfBirth, streetAddress, streetAddress2, city, state, postalCode, 
                         profilePhoto, 
                         companyName, industryType, designation, incomePerMonth, cardNo, citizen_document, passport, passport_upload, 
                         household_registration, registration_document, government_issued, government_issued_doc, idNo, bank_statement_doc,
@@ -297,7 +333,7 @@ class BankModel{
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         
                     let params = [
-                        data.fullName, data.email, data.gender, data.mobileNumber, data.dateOfBirth, data.streetAddress,
+                        data.customer_type, data.customer_id, data.fullName, data.email, data.gender, data.mobileNumber, data.dateOfBirth, data.streetAddress,
                         data.streetAddress2, data.city, data.state, data.postalCode, data.profilePhoto, data.companyName, data.industryType,
                         data.designation, data.incomePerMonth, data.cardNo, data.citizen_document, data.passport, data.passport_upload,
                         data.household_registration, data.registration_document, data.government_issued, data.government_issued_doc,
