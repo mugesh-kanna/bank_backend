@@ -297,7 +297,7 @@ class BankModel{
                         companyName, industryType, designation, incomePerMonth, cardNo, citizen_document, passport, passport_upload, 
                         household_registration, registration_document, government_issued, government_issued_doc, idNo, bank_statement_doc,
                         loanType, loanTenure, loanAmount, purpose, collateral) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         
                     let params = [
                         data.customer_type, data.customer_id, data.fullName, data.email, data.gender, data.mobileNumber, data.dateOfBirth, data.streetAddress,
@@ -405,7 +405,7 @@ class BankModel{
                         companyName, industryType, designation, incomePerMonth, cardNo, citizen_document, passport, passport_upload, 
                         household_registration, registration_document, government_issued, government_issued_doc, idNo, bank_statement_doc,
                         annualIncome, creditLimit, creditCardPurpose) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         
                     let params = [
                         data.customer_type, data.customer_id, data.fullName, data.email, data.gender, data.mobileNumber, data.dateOfBirth, data.streetAddress,
