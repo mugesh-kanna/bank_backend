@@ -482,6 +482,54 @@ class BankModel{
         WHERE a.isactive = 1;`;
         return db(sql);
     }
+
+    customerDashboard = () => {
+        let sql = `SELECT count(1) as total, count(case when approve_sts = 1 then 1 else null end) as approved,
+        count(case when approve_sts = 2 then 1 else null end) as rejected,
+        count(case when approve_sts = 0 then 1 else null end) as pending
+        from customer_management where isactive = 1;`;
+        return db(sql);
+    }
+
+    juristicDashboard = () => {
+        let sql = `SELECT count(1) as total, count(case when approve_sts = 1 then 1 else null end) as approved,
+        count(case when approve_sts = 2 then 1 else null end) as rejected,
+        count(case when approve_sts = 0 then 1 else null end) as pending
+        from juristic_person_details where isactive = 1;`;
+        return db(sql);
+    }
+
+    loanReqDashboard = () => {
+        let sql = `SELECT count(1) total, count(case when a.customer_type = 1 then 1 else null end) as total_customer,
+        count(case when a.customer_type = 2 then 1 else null end) as total_juristic,
+        count(case when a.approve_sts = 1 then 1 else null end) as approved,
+        count(case when a.approve_sts = 2 then 1 else null end) as rejected,
+        count(case when a.approve_sts = 0 then 1 else null end) as pending,
+        count(case when a.customer_type = 1 and a.approve_sts = 1 then 1 else null end) as customer_approved,
+        count(case when a.customer_type = 1 and a.approve_sts = 2 then 1 else null end) as customer_rejected,
+        count(case when a.customer_type = 1 and a.approve_sts = 0 then 1 else null end) as customer_pending,
+        count(case when a.customer_type = 2 and a.approve_sts = 1 then 1 else null end) as juristic_approved,
+        count(case when a.customer_type = 2 and a.approve_sts = 2 then 1 else null end) as juristic_rejected,
+        count(case when a.customer_type = 2 and a.approve_sts = 0 then 1 else null end) as juristic_pending
+        from loan_request_details a where a.isactive = 1;`;
+        return db(sql);
+    }
+
+    creditReqDashboard = () => {
+        let sql = `SELECT count(1) total, count(case when a.customer_type = 1 then 1 else null end) as total_customer,
+        count(case when a.customer_type = 2 then 1 else null end) as total_juristic,
+        count(case when a.approve_sts = 1 then 1 else null end) as approved,
+        count(case when a.approve_sts = 2 then 1 else null end) as rejected,
+        count(case when a.approve_sts = 0 then 1 else null end) as pending,
+        count(case when a.customer_type = 1 and a.approve_sts = 1 then 1 else null end) as customer_approved,
+        count(case when a.customer_type = 1 and a.approve_sts = 2 then 1 else null end) as customer_rejected,
+        count(case when a.customer_type = 1 and a.approve_sts = 0 then 1 else null end) as customer_pending,
+        count(case when a.customer_type = 2 and a.approve_sts = 1 then 1 else null end) as juristic_approved,
+        count(case when a.customer_type = 2 and a.approve_sts = 2 then 1 else null end) as juristic_rejected,
+        count(case when a.customer_type = 2 and a.approve_sts = 0 then 1 else null end) as juristic_pending
+        from creditcard_request_details a where a.isactive = 1;`;
+        return db(sql);
+    }
     
 }
 

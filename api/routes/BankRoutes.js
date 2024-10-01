@@ -23,5 +23,6 @@ router.get('/loanReqDet', auth, BankCtrl.loanReqDet);
 router.post('/creditCardReqUpt', auth, BankCtrl.creditCardReqUpt);
 router.get('/creditCardReqDet', auth, BankCtrl.creditCardReqDet);
 router.post('/upload', auth, BankCtrl.upload);
+router.get('/dashboardGet', auth, BankCtrl.dashboardGet);
 
 module.exports = router;

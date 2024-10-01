@@ -953,6 +953,41 @@ class BankCtrl {
             // });
         }
     }
+
+    dashboardGet = async (req, res, next) => {
+        try {
+
+            const result = {};
+            result['customerDashboard'] = await BankModel.customerDashboard();
+            result['juristicDashboard'] = await BankModel.juristicDashboard();
+            result['loanReqDashboard'] = await BankModel.loanReqDashboard();
+            result['creditReqDashboard'] = await BankModel.creditReqDashboard();
+
+            let data = common.empty(result);
+            if (!data) {
+                res.status(200).json({
+                    dataStatus: true,
+                    status: 200,
+                    result: result
+                })
+            } else {
+                const error = new Error("No Data Found");
+                res.status(200).json({
+                    dataStatus: false,
+                    status: 200,
+                    message: error.message
+                });
+
+            }
+
+        } catch (error) {
+            res.status(200).json({
+                dataStatus: false,
+                status: 200,
+                message: error.message
+            });
+        }
+    }
 }
 
 module.exports = new BankCtrl;
